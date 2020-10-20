@@ -1,0 +1,103 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Git Sync",
+      "type": "shell",      
+      "options": {
+        "cwd": ".vscode"
+      },
+      "windows": {
+        "command": "Powershell.exe -File feature_branch_sync.ps1"
+      },
+      "auto": false
+    },
+    {
+      "label": "clean",
+      "command": "dotnet",
+      "options": {
+        "cwd": "${workspaceFolder}/${workspaceFolderBasename}"
+      },
+      "args": [
+        "clean",
+        "/property:GenerateFullPaths=true",
+        "/consoleloggerparameters:NoSummary"
+      ],
+      "type": "process",
+      "problemMatcher": "$msCompile"
+    },
+    {
+        "label": "build",
+        "command": "dotnet",
+        "options": {
+          "cwd": "${workspaceFolder}/${workspaceFolderBasename}"
+        },        
+        "args": [
+            "build",
+            "/property:GenerateFullPaths=true",
+            "/consoleloggerparameters:NoSummary"
+        ],
+        "type": "process",
+        "dependsOn": "clean",
+        "group": {
+            "kind": "build",
+            "isDefault": true
+        },
+        "problemMatcher": "$msCompile"
+    },
+    {
+        "label": "clean release",
+        "command": "dotnet",
+        "options": {
+          "cwd": "${workspaceFolder}/${workspaceFolderBasename}"
+        },        
+        "args": [
+            "clean",
+            "--configuration",
+            "Release",
+            "/property:GenerateFullPaths=true",
+            "/consoleloggerparameters:NoSummary"
+        ],
+        "type": "process",
+        "problemMatcher": "$msCompile"
+    },
+    {
+        "label": "publish",
+        "command": "dotnet",
+        "options": {
+          "cwd": "${workspaceFolder}/${workspaceFolderBasename}"
+        },        
+        "args": [
+            "publish",
+            "--configuration",
+            "Release",
+            "/property:GenerateFullPaths=true",
+            "/consoleloggerparameters:NoSummary"
+        ],
+        "type": "process",
+        "dependsOn": "clean release",
+        "problemMatcher": "$msCompile"
+    },
+    {
+      "type": "shell",
+      "label": "run functions host",
+      "dependsOn": "build",
+      "options": {
+        "cwd": "${workspaceFolder}/${workspaceFolderBasename}/bin/Debug/netcoreapp3.1"
+      },
+      "command": "func host start",
+      "isBackground": true,
+      "problemMatcher": "$func-watch"
+    },
+    {
+      "label": "run all tests",
+      "command": "dotnet test",      
+      "options": {
+        "cwd": "${workspaceFolder}/${workspaceFolderBasename}-tests",        
+      },   
+      "type": "shell",      
+      "group": "test",    
+      "problemMatcher": []
+    } 
+  ]
+}
