@@ -67,13 +67,13 @@ module.exports = function(context, req) {
           if( t >= lastSeenMinute ) {
             pointData.push({lat: points[i].latitude,
                             lng: points[i].longitude,
-                            "relative-seconds": t})
+                            "relative-seconds": departAtSec + t})
             lastSeenMinute += 60
           }
         }
         pointData.push({lat: points[pointCount-1].latitude,
                         lng: points[pointCount-1].longitude,
-                        "relative-seconds": timeSec})
+                        "relative-seconds": departAtSec + timeSec})
         routePoints.push(pointData)
       }
 
